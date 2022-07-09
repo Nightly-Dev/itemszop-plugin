@@ -13,7 +13,7 @@ public class Main extends JavaPlugin {
     String firebaseWebsocketUrl;
     String serverId;
     String secret;
-    Main plugin;
+    static Main plugin;
     WebSocket ws;
 
     @Override
@@ -42,6 +42,7 @@ public class Main extends JavaPlugin {
             firebaseWebsocketUrl = urlList[0] + "&" + urlList[2];
             System.out.println(firebaseWebsocketUrl);
         }
+        WebSocketConnect();
         // intro
         String intro = "\n" +
                 ChatColor.BLUE + "(_)| |                                           \n" +
@@ -59,23 +60,24 @@ public class Main extends JavaPlugin {
         }
 
         //connect to firebase
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            ws = new WebSocket(plugin, new URI(firebaseWebsocketUrl));
-                            ws.setConnectionLostTimeout( 0 );
-                            ws.connect();
-                            setupTasks();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                3000
-        );
-
+//        new java.util.Timer().schedule(
+//                new java.util.TimerTask() {
+//                    @Override
+//                    public void run() {
+//
+////                            ws = new WebSocket(plugin, new URI(firebaseWebsocketUrl));
+////                            ws.setConnectionLostTimeout( 0 );
+////                            ws.connect();
+//                            setupTasks();
+//
+////                        catch (URISyntaxException e) {
+////                            e.printStackTrace();
+////                        }
+//                    }
+//                },
+//                3000
+//        );
+//
     }
     @Override
     public void onDisable() {
@@ -83,12 +85,27 @@ public class Main extends JavaPlugin {
         ws.close();
     }
 
-    private void setupTasks () {
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            if (ws.isOpen()) {
-                ws.send("");
-            }
-        }, 0L, (60 * 20));
+//    private void setupTasks () {
+//        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+//            try {
+//                ws = new WebSocket(plugin, new URI(firebaseWebsocketUrl));
+//                ws.connect();
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+//        }, 0L, (120 * 20));
+//    }
+    public void WebSocketConnect() {
+        try {
+            ws = new WebSocket(new URI(firebaseWebsocketUrl));
+            ws.connect();
+            ws.setConnectionLostTimeout(0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static Main getInstance() {
+        return plugin;
     }
 }
 

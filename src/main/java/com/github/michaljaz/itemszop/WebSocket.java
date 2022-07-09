@@ -12,11 +12,10 @@ import java.util.Objects;
 import static org.bukkit.Bukkit.getServer;
 
 public class WebSocket extends WebSocketClient {
-    Main plugin;
+    Main plugin = Main.getInstance();
 
-    public WebSocket(Main plugin, URI serverUri) {
+    public WebSocket(URI serverUri) {
         super(serverUri);
-        this.plugin = plugin;
     }
 
 
@@ -56,7 +55,7 @@ public class WebSocket extends WebSocketClient {
         System.out.println("disconnected: " + reason);
 
         if (code != 1000) {
-            new WebSocketReconnectTask(plugin, this).runTaskTimer(plugin, 0L, (10 * 20 ));
+            new WebSocketReconnectTask(plugin, this).runTaskTimer(plugin, 0L, (120 * 20 ));
         }
     }
 

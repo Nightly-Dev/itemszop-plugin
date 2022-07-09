@@ -14,7 +14,10 @@ public class WebSocketReconnectTask extends BukkitRunnable {
     public void run() {
         if (!socket.isOpen()) {
             plugin.getLogger().info("Reconnecting to websocket...");
-            socket.reconnect();
+                try {
+                    socket.reconnect();
+                } catch (Exception e) {}
+
         } else {
             cancel();
         }
